@@ -1,0 +1,9 @@
+.product-table .card{ margin-bottom:16px }
+.table{ width:100%; border-collapse:collapse; background:#fff; border-radius:6px; overflow:hidden; }
+.table th, .table td{ padding:10px 12px; text-align:left; border-bottom:1px solid #eef2f7 }
+.table thead{ background:#f8fafc }
+.page-title{ font-size:18px; margin-bottom:12px }
+.loading{ color:var(--muted) }
+.btn{ padding:6px 8px; border-radius:6px; cursor:pointer }
+.btn.secondary{ background:#efefef }
+.pagination{ margin-top:12px }

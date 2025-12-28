@@ -1,0 +1,8 @@
+.product-sold .card{ background:#fff;padding:16px;border-radius:8px;box-shadow:0 2px 6px rgba(16,24,40,0.06);margin-bottom:16px }
+.form{ display:flex; flex-direction:column; gap:8px }
+.input{ padding:8px 10px; border:1px solid #e5e7eb; border-radius:6px }
+.actions{ margin-top:8px }
+.btn{ padding:8px 12px; border-radius:6px; border:0; cursor:pointer }
+.btn.primary{ background:var(--primary); color:white }
+.result{ background:#f8fafc; padding:12px; border-radius:6px; margin-top:12px }
+.loading{ color:var(--muted) }

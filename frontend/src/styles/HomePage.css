@@ -1,0 +1,22 @@
+:root{
+    --primary: #2563eb;
+    --muted: #6b7280;
+}
+
+.homepage.container{
+    display:flex; flex-direction:column; gap:16px;
+}
+
+.header{ display:flex; align-items:center; justify-content:space-between }
+.tabs{ display:flex; gap:8px }
+.tab-btn{ padding:8px 12px; border-radius:6px; border:0; cursor:pointer }
+.tab-btn:hover{ background:#eef2ff }
+
+.dashboard-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    position: relative;
+}
+
