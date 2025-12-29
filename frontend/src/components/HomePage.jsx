@@ -2,32 +2,37 @@ import React, { useState } from "react";
 
 import AddRemoveProduct from "./AddRemoveProduct";
 import ProductSold from "./ProductSold";
+import ProductTable from "./ProductTable";
+import DashboardSummary from "./DashboardSummary";
+import Header from "./Header";
 
-import "../styles/HomePage.css"
+import "../styles/HomePage.css";
 
 function HomePage() {
-    const [showAddProduct, setShowAddProduct] = useState(false)
-    const [showProductSold, setShowProductSold] = useState(false)
+    const [showAddProduct, setShowAddProduct] = useState(true);
+    const [showProductSold, setShowProductSold] = useState(false);
 
     return (
         <div className="homepage container">
-            <header className="header">
-                <h1 className="dashboard-title" onClick={() => window.location.reload(true)}>
-                    Business Dashboard
-                </h1>
+            <Header onOpenAdd={() => { setShowAddProduct(true); setShowProductSold(false); }} onOpenSold={() => { setShowProductSold(true); setShowAddProduct(false); }} />
 
-                <div className="tabs">
-                    <button className="tab-btn" onClick={()=> {setShowProductSold(true); setShowAddProduct(false)}}>Product Sold</button>
-                    <button className="tab-btn" onClick={() => {setShowAddProduct(true); setShowProductSold(false)}}>Add Product</button>
+            <div className="layout-grid">
+                <div className="main-col">
+                    <DashboardSummary />
+                    <div className="section card">
+                        <ProductTable />
+                    </div>
                 </div>
-            </header>
 
-            <main className="main">
-                {showAddProduct && <AddRemoveProduct /> }
-                {showProductSold && <ProductSold />}
-            </main>
+                <aside className="side-col">
+                    <div className="card">
+                        {showAddProduct && <AddRemoveProduct />}
+                        {showProductSold && <ProductSold />}
+                    </div>
+                </aside>
+            </div>
         </div>
-    )
+    );
 }
 
-export default HomePage
+export default HomePage;

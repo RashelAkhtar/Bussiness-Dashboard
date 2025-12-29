@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import pool from "./db.js";
 import dotenv from "dotenv";
+import router from "./routes/dashboard.js";
 
 dotenv.config();
 
@@ -10,6 +11,7 @@ const PORT = process.env.PORT;
 
 app.use(cors());
 app.use(express.json());
+app.use("/api/dashboard", router);
 
 app.get("/api/product", async (req, res) => {
     try {
