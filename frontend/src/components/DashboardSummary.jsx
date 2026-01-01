@@ -30,6 +30,8 @@ ChartJS.register(
 
 function DashboardSummary () {
     const API = import.meta.env.VITE_API;
+    // default range: 1 month
+    const [range, setRange] = React.useState('1m');
 
     const [summary, setSummary] = useState(null);
     const [topProducts, setTopProducts] = useState([]);
@@ -42,12 +44,13 @@ function DashboardSummary () {
     useEffect(() => {
         const fetchDashboardData = async () => {
             try {
+                const qs = `?range=${encodeURIComponent(range)}`;
                 const [summaryRes, topRes, leastRes, salesRes, profitRes] = await Promise.all ([
-                    fetch(`${API}/api/dashboard/summary`),
-                    fetch(`${API}/api/dashboard/top-products`),
-                    fetch(`${API}/api/dashboard/least-products`),
-                    fetch(`${API}/api/dashboard/sales-trend`),
-                    fetch(`${API}/api/dashboard/profit-trend`),
+                    fetch(`${API}/api/dashboard/summary${qs}`),
+                    fetch(`${API}/api/dashboard/top-products${qs}`),
+                    fetch(`${API}/api/dashboard/least-products${qs}`),
+                    fetch(`${API}/api/dashboard/sales-trend${qs}`),
+                    fetch(`${API}/api/dashboard/profit-trend${qs}`),
                 ]);
 
                 if ( !summaryRes.ok || !topRes.ok || ! leastRes.ok || !salesRes.ok || !profitRes.ok) {
@@ -73,8 +76,10 @@ function DashboardSummary () {
             }
         };
 
-        fetchDashboardData();    
-    }, [API]);
+        // reset loading while fetching
+        setLoading(true);
+        fetchDashboardData();
+    }, [API, range]);
 
 
     if (loading) return <p>Loading Dashboard...</p>
@@ -92,6 +97,28 @@ function DashboardSummary () {
 
     return (
         <div className="dashboard-summary">
+            <div className="summary-controls">
+                <div className="range-controls" role="tablist" aria-label="Time range">
+                    {[
+                        { key: '7d', label: 'Week' },
+                        { key: '1m', label: 'Month' },
+                        { key: '3m', label: '3M' },
+                        { key: '6m', label: '6M' },
+                        { key: '1y', label: '1Y' },
+                        { key: '2y', label: '2Y' },
+                        { key: 'all', label: 'All' },
+                    ].map((opt) => (
+                        <button
+                            key={opt.key}
+                            className={"range-btn" + (range === opt.key ? ' active' : '')}
+                            onClick={() => setRange(opt.key)}
+                            aria-pressed={range === opt.key}
+                        >
+                            {opt.label}
+                        </button>
+                    ))}
+                </div>
+            </div>
             <div className="summary-header">
                 <h2>Business Summary</h2>
             </div>

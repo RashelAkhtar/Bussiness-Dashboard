@@ -18,6 +18,19 @@
   margin-bottom: var(--spacing-md);
 }
 
+.summary-controls{ display:flex; justify-content:flex-end; margin-bottom:8px }
+
+.range-controls{ display:flex; gap:8px; align-items:center }
+.range-btn{
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.range-btn.active{ background: var(--primary-gradient); color: white; border-color: transparent }
+
 .summary-header h2 {
   font-size: 1.75rem;
   font-weight: 700;
