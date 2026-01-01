@@ -116,22 +116,28 @@ function DashboardSummary () {
             </div>
 
             <div className="charts-grid">
-                <div className="card chart-card">
-                    <h3>Sales Trend</h3>
-                    <Line data={{ labels: salesLabels, datasets: [{ label: 'Units sold', data: salesValues, borderColor: '#1976d2', backgroundColor: 'rgba(25,118,210,0.08)', tension: 0.2 }] }} options={{ responsive: true, maintainAspectRatio: false }} />
-                </div>
+                                <div className="card chart-card">
+                                        <h3>Sales Trend</h3>
+                                        <div className="chart-wrapper">
+                                            <Line data={{ labels: salesLabels, datasets: [{ label: 'Units sold', data: salesValues, borderColor: '#1976d2', backgroundColor: 'rgba(25,118,210,0.08)', tension: 0.2 }] }} options={{ responsive: true, maintainAspectRatio: false }} />
+                                        </div>
+                                </div>
 
-                <div className="card chart-card">
-                    <h3>Profit Trend</h3>
-                    <Line data={{ labels: profitLabels, datasets: [{ label: 'Profit', data: profitValues, borderColor: '#4caf50', backgroundColor: 'rgba(76,175,80,0.08)', tension: 0.2 }] }} options={{ responsive: true, maintainAspectRatio: false }} />
-                </div>
+                                <div className="card chart-card">
+                                        <h3>Profit Trend</h3>
+                                        <div className="chart-wrapper">
+                                            <Line data={{ labels: profitLabels, datasets: [{ label: 'Profit', data: profitValues, borderColor: '#4caf50', backgroundColor: 'rgba(76,175,80,0.08)', tension: 0.2 }] }} options={{ responsive: true, maintainAspectRatio: false }} />
+                                        </div>
+                                </div>
             </div>
 
             <div className="tables-grid">
-                <div className="card table-card">
-                    <h3>Top Products</h3>
-                    <Bar data={{ labels: topLabels, datasets: [{ label: 'Units sold', data: topValues, backgroundColor: '#2196f3' }] }} options={{ responsive: true, maintainAspectRatio: false }} />
-                </div>
+                                <div className="card table-card">
+                                        <h3>Top Products</h3>
+                                        <div className="chart-wrapper">
+                                            <Bar data={{ labels: topLabels, datasets: [{ label: 'Units sold', data: topValues, backgroundColor: '#2196f3' }] }} options={{ responsive: true, maintainAspectRatio: false }} />
+                                        </div>
+                                </div>
 
                 <div className="card table-card">
                     <h3>Least Sold Products</h3>

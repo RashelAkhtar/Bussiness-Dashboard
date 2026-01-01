@@ -1,16 +1,20 @@
 import React from "react";
+import { NavLink } from 'react-router-dom';
 import "../styles/Header.css";
 
-export default function Header({ onOpenAdd, onOpenSold }) {
+export default function Header() {
   return (
     <header className="app-header card">
-      <div className="brand" onClick={() => window.location.reload()}>
-        <h1>Business Dashboard</h1>
+      <div className="brand">
+        <h1>
+          <NavLink to="/summary" className="brand-link">Business Dashboard</NavLink>
+        </h1>
       </div>
 
       <nav className="nav-actions">
-        <button className="btn" onClick={onOpenSold}>Record Sale</button>
-        <button className="btn primary" onClick={onOpenAdd}>Add Product</button>
+        <NavLink to="/summary" className={({isActive}) => isActive ? 'btn active' : 'btn'}>Summary</NavLink>
+        <NavLink to="/products" className={({isActive}) => isActive ? 'btn active' : 'btn'}>Products</NavLink>
+        <NavLink to="/sales" className={({isActive}) => isActive ? 'btn primary active' : 'btn primary'}>Record Sale</NavLink>
       </nav>
     </header>
   );

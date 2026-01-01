@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import ProductTable from "./ProductTable";
 import "../styles/AddRemoveProduct.css";
 
 function AddRemoveProduct() {
@@ -74,9 +73,7 @@ function AddRemoveProduct() {
               </form>
             </div>
 
-            <div className="card">
-                <ProductTable />
-            </div>
+            {/* Product table is now on the Products page */}
         </div>
     )
 }

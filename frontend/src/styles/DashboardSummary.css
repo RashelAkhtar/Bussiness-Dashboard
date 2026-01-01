@@ -98,45 +98,37 @@
 /* Charts Grid */
 .charts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: var(--spacing-xl);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--spacing-md);
 }
 
 .chart-card {
-  padding: var(--spacing-xl);
+  padding: var(--spacing-md);
   background: var(--bg-secondary);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
   border: 1px solid var(--border-light);
-  min-height: 380px;
+  height: 200px; /* compact card height so charts fit in a single viewport frame */
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .chart-card h3 {
-  font-size: 1.125rem;
+  font-size: 1rem;
   font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: var(--spacing-lg);
-  padding-bottom: var(--spacing-md);
-  border-bottom: 2px solid var(--border-light);
+  margin: 0 0 var(--spacing-sm) 0;
+}
+
+.chart-wrapper {
+  flex: 1 1 auto;
+  height: 1px; /* allow flex to size the wrapper */
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
 }
 
-.chart-card h3::before {
-  content: '';
-  width: 4px;
-  height: 20px;
-  background: var(--primary-gradient);
-  border-radius: var(--radius-sm);
-}
-
-.chart-card > div {
-  flex: 1;
-  min-height: 300px;
-}
+.chart-wrapper canvas { max-height: 140px !important; width: 100% !important; }
 
 /* Tables Grid */
 .tables-grid {
