@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../styles/AddRemoveProduct.css";
+import Modal from './Modal';
 
 function AddRemoveProduct() {
     const API = import.meta.env.VITE_API;
@@ -9,6 +10,7 @@ function AddRemoveProduct() {
         buyingPrice: "",
         productQty: "",
     });
+    const [modal, setModal] = useState({ open: false, title: '', message: '' });
     // const [file, setFile] = useState(null);
 
 
@@ -42,7 +44,8 @@ function AddRemoveProduct() {
             setForm({ productName: "", buyingPrice: "", productQty: "" });
         }
 
-        alert(data.message || (res.ok ? "Product added" : "Failed to add product"));
+        // show modal with server response
+        setModal({ open: true, title: res.ok ? 'Success' : 'Error', message: data.message || (res.ok ? 'Product added' : 'Failed to add product') });
     }
     // const handleChange = (e) => {
     //     const selectedFile = e.target.files[0];
@@ -73,7 +76,10 @@ function AddRemoveProduct() {
               </form>
             </div>
 
-            {/* Product table is now on the Products page */}
+                        {/* Product table is now on the Products page */}
+                        <Modal open={modal.open} title={modal.title} onClose={() => setModal({ open: false })}>
+                            <div>{modal.message}</div>
+                        </Modal>
         </div>
     )
 }

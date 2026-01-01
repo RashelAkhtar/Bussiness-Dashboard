@@ -120,7 +120,7 @@ function DashboardSummary () {
                 </div>
             </div>
             <div className="summary-header">
-                <h2>Business Summary</h2>
+                <h2>📈 Business Summary</h2>
             </div>
 
             <div className="kpi-grid">

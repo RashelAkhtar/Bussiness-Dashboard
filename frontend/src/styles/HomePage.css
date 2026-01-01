@@ -3,11 +3,12 @@
   flex-direction: column;
   gap: var(--spacing-xl);
   min-height: 100vh;
+  animation: fadeIn 0.6s ease-out;
 }
 
 .layout-grid {
   display: grid;
-  grid-template-columns: 1fr 400px;
+  grid-template-columns: 1fr 420px;
   gap: var(--spacing-xl);
   align-items: start;
 }
@@ -16,6 +17,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-xl);
+  animation: fadeIn 0.8s ease-out;
 }
 
 .side-col {
@@ -23,13 +25,15 @@
   flex-direction: column;
   gap: var(--spacing-lg);
   position: sticky;
-  top: calc(var(--spacing-lg) + 80px);
-  max-height: calc(100vh - 120px);
+  top: calc(var(--spacing-lg) + 100px);
+  max-height: calc(100vh - 140px);
   overflow-y: auto;
+  overflow-x: hidden;
+  animation: slideIn 0.8s ease-out 0.2s both;
 }
 
 .side-col::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 .side-col::-webkit-scrollbar-track {
@@ -38,22 +42,23 @@
 }
 
 .side-col::-webkit-scrollbar-thumb {
-  background: var(--text-muted);
+  background: var(--border-dark);
   border-radius: var(--radius-md);
+  border: 2px solid var(--bg-tertiary);
 }
 
 .side-col::-webkit-scrollbar-thumb:hover {
-  background: var(--text-secondary);
+  background: var(--primary);
 }
 
 .section {
-  animation: fadeInUp 0.4s ease-out;
+  animation: fadeInUp 0.5s ease-out;
 }
 
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
@@ -69,6 +74,7 @@
   .side-col {
     position: static;
     max-height: none;
+    overflow: visible;
   }
 }
 

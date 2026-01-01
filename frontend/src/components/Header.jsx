@@ -14,7 +14,7 @@ export default function Header() {
       <nav className="nav-actions">
         <NavLink to="/summary" className={({isActive}) => isActive ? 'btn active' : 'btn'}>Summary</NavLink>
         <NavLink to="/products" className={({isActive}) => isActive ? 'btn active' : 'btn'}>Products</NavLink>
-        <NavLink to="/sales" className={({isActive}) => isActive ? 'btn primary active' : 'btn primary'}>Record Sale</NavLink>
+        <NavLink to="/sales" className={({isActive}) => isActive ? 'btn active' : 'btn'}>Record Sale</NavLink>
       </nav>
     </header>
   );

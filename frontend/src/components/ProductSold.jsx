@@ -98,17 +98,17 @@ function ProductSold () {
 
             <div className="card">
               <form className="form" onSubmit={handleSubmit}>
-                <p>Product: </p>
+                <label>Product</label>
                 <div>
                     <input
+                        className="input"
                         type="text"
                         placeholder="Search products..."
                         value={filter}
                         onChange={(e) => setFilter(e.target.value)}
-                        style={{ marginBottom: 8 }}
                     />
 
-                    <select name="productId" value={form.productId} onChange={(e) => {
+                    <select className="input" name="productId" value={form.productId} onChange={(e) => {
                         const id = e.target.value;
                         const prod = data.find(d => String(d.id) === String(id));
                         setForm({ ...form, productId: id, productName: prod ? prod.productName : "" });

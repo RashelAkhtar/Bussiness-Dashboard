@@ -1,6 +1,6 @@
 .app-header {
-  background: var(--bg-secondary);
-  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  border-radius: var(--radius-xl);
   box-shadow: var(--shadow-md);
   padding: var(--spacing-lg) var(--spacing-xl);
   margin-bottom: var(--spacing-xl);
@@ -8,41 +8,53 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--spacing-lg);
-  border: 1px solid var(--border-light);
+  border: 1px solid var(--border);
   position: sticky;
   top: var(--spacing-lg);
-  z-index: 100;
+  z-index: 1000;
   backdrop-filter: blur(10px);
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.9);
+  animation: slideIn 0.5s ease-out;
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-md);
   cursor: pointer;
   transition: transform var(--transition-base);
+  position: relative;
 }
 
 .brand:hover {
-  transform: scale(1.02);
-}
-
-.brand h1 {
-  background: var(--primary-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-size: 1.75rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  margin: 0;
+  transform: scale(1.05);
 }
 
 .brand::before {
   content: '📊';
-  font-size: 1.5rem;
-  margin-right: var(--spacing-xs);
+  font-size: 2rem;
+  filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.3));
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.brand h1 {
+  margin: 0;
+}
+
+.brand-link {
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  text-decoration: none;
+  display: block;
+}
+
+.brand-link:hover {
+  opacity: 0.9;
 }
 
 .nav-actions {
@@ -52,61 +64,58 @@
 }
 
 .nav-actions .btn {
-  padding: 0.5rem 0.9rem;
-  font-size: 0.875rem;
+  padding: 0.875rem 2rem;
+  font-size: 0.9375rem;
   font-weight: 600;
   border-radius: var(--radius-md);
   transition: all var(--transition-base);
   position: relative;
   overflow: hidden;
-  text-decoration: none;
-  color: inherit;
-}
-
-.nav-actions .btn:not(.primary) {
+  min-width: 140px;
+  justify-content: center;
   background: var(--bg-tertiary);
   color: var(--text-primary);
-  border: 1.5px solid var(--border);
+  border: 2px solid var(--border);
 }
 
-.nav-actions .btn:not(.primary):hover {
-  background: var(--bg-secondary);
+.nav-actions .btn:hover {
+  background: var(--bg-hover);
   border-color: var(--primary);
   color: var(--primary);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
 }
 
-.nav-actions .btn.primary {
+.nav-actions .btn.active {
   background: var(--primary-gradient);
   color: white;
+  border-color: var(--primary);
   box-shadow: var(--shadow-md);
-  border: none;
 }
 
-.nav-actions .btn.primary:hover {
+.nav-actions .btn.active:hover {
   box-shadow: var(--shadow-lg);
   transform: translateY(-2px);
 }
 
-.nav-actions .btn.primary::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s;
+/* Remove primary class styling for nav buttons - make them all the same */
+.nav-actions .btn.primary {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 2px solid var(--border);
 }
 
-.nav-actions .btn.primary:hover::before {
-  left: 100%;
+.nav-actions .btn.primary:hover {
+  background: var(--bg-hover);
+  border-color: var(--primary);
+  color: var(--primary);
+  box-shadow: var(--shadow-md);
 }
 
-.nav-actions .btn.active {
-  box-shadow: var(--shadow-sm);
-  transform: translateY(-2px);
+.nav-actions .btn.primary.active {
+  background: var(--primary-gradient);
+  color: white;
+  border-color: var(--primary);
 }
 
 @media (max-width: 768px) {
@@ -114,19 +123,25 @@
     flex-direction: column;
     align-items: stretch;
     padding: var(--spacing-md);
+    position: relative;
   }
   
-  .brand h1 {
-    font-size: 1.5rem;
+  .brand {
+    justify-content: center;
+  }
+  
+  .brand-link {
+    font-size: 1.75rem;
   }
   
   .nav-actions {
     flex-direction: column;
     width: 100%;
+    gap: var(--spacing-sm);
   }
   
   .nav-actions .btn {
     width: 100%;
-    justify-content: center;
+    min-width: unset;
   }
 }

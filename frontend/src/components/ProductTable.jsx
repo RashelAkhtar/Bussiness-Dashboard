@@ -1,6 +1,7 @@
 import {flexRender, getCoreRowModel, getPaginationRowModel, useReactTable} from "@tanstack/react-table";
 import { useEffect, useState } from "react";
 import "../styles/ProductTable.css";
+import Modal from './Modal';
 
 function ProductTable () {
     const API = import.meta.env.VITE_API;
@@ -9,6 +10,7 @@ function ProductTable () {
     const [soldData, setSoldData] = useState([]);
     const [mergedData, setMergedData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [modal, setModal] = useState({ open: false, title: '', message: '' });
 
     // Fetch product
     const fetchProduct = async () => {
@@ -128,9 +130,9 @@ function ProductTable () {
             setData((prev) => prev.filter((item) => String(item.id) !== String(id)));
 
             // show server message if present
-            if (json?.message) alert(json.message);
+            setModal({ open: true, title: 'Deleted', message: json?.message || 'Product deleted' });
         } catch (err) {
-            alert("Error deleting record: " + (err.message || err));
+            setModal({ open: true, title: 'Error', message: "Error deleting record: " + (err.message || err) });
             console.error(err);
         }
     }
@@ -146,7 +148,7 @@ function ProductTable () {
         {
             header: "Actions",
             cell: ({row}) => (
-                <button onClick={() => handleDelete(row.original.id)}>DELETE</button>
+                <button className="btn danger" onClick={() => handleDelete(row.original.id)}>DELETE</button>
             )
         }
     ];
@@ -212,7 +214,10 @@ function ProductTable () {
           Next
         </button>
       </div>
-    </div>
+        <Modal open={modal.open} title={modal.title} onClose={() => setModal({ ...modal, open: false })}>
+            <div>{modal.message}</div>
+        </Modal>
+        </div>
     )
 }
 
