@@ -2,12 +2,15 @@ import express from "express";
 import cors from "cors";
 import pool from "./db.js";
 import dotenv from "dotenv";
+import path from 'path';
 import router from "./routes/dashboard.js";
 
-dotenv.config();
+// load .env located next to this file (backend/.env) so server works even when started from repo root
+const envPath = path.join(path.dirname(new URL(import.meta.url).pathname), '.env');
+dotenv.config({ path: envPath });
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
