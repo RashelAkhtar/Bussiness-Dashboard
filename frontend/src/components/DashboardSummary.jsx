@@ -127,17 +127,25 @@ function DashboardSummary () {
 
             <div className="kpi-grid">
                 <div className="kpi card">
+                    <div className="kpi-title">Total in Store</div>
+                    <div className="kpi-value">₹ {Number(summary?.inventory_value ?? 0).toFixed(2)}</div>
+                </div>
+
+                <div className="kpi card">
                     <div className="kpi-title">Total Revenue</div>
                     <div className="kpi-value">₹ {Number(summary?.total_revenue ?? 0).toFixed(2)}</div>
                 </div>
+
                 <div className="kpi card">
                     <div className="kpi-title">Total Profit</div>
                     <div className="kpi-value">₹ {Number(summary?.total_profit ?? 0).toFixed(2)}</div>
                 </div>
+                
                 <div className="kpi card">
                     <div className="kpi-title">Total Units Sold</div>
                     <div className="kpi-value">{summary?.total_sold ?? 0}</div>
                 </div>
+                
                 <div className="kpi card">
                     <div className="kpi-title">Total Products</div>
                     <div className="kpi-value">{summary?.total_products ?? 0}</div>

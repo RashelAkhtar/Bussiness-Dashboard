@@ -28,7 +28,8 @@ router.get("/summary", async (req, res) => {
                     COALESCE(SUM(s.selling_price * s.quantity), 0)::numeric AS total_revenue,
                     COALESCE(SUM(s.total_profit), 0)::numeric AS total_profit,
                     COALESCE(SUM(s.quantity), 0)::int AS total_sold,
-                    (SELECT COUNT(*) FROM product_list)::int AS total_products
+                    (SELECT COUNT(*) FROM product_list)::int AS total_products,
+                    (SELECT COALESCE(SUM(buying_price * quantity),0)::numeric FROM product_list) AS inventory_value
                 FROM sales s`
             );
         } else {
@@ -37,14 +38,15 @@ router.get("/summary", async (req, res) => {
                     COALESCE(SUM(s.selling_price * s.quantity), 0)::numeric AS total_revenue,
                     COALESCE(SUM(s.total_profit), 0)::numeric AS total_profit,
                     COALESCE(SUM(s.quantity), 0)::int AS total_sold,
-                    (SELECT COUNT(*) FROM product_list)::int AS total_products
+                    (SELECT COUNT(*) FROM product_list)::int AS total_products,
+                    (SELECT COALESCE(SUM(buying_price * quantity),0)::numeric FROM product_list) AS inventory_value
                 FROM sales s
                 WHERE s.sold_at >= now() - $1::interval`,
                 [cfg.interval]
             );
         }
 
-        res.json(result.rows[0] || { total_revenue: 0, total_profit: 0, total_sold: 0 });
+    res.json(result.rows[0] || { total_revenue: 0, total_profit: 0, total_sold: 0, inventory_value: 0 });
     } catch (err) {
         console.error("GET /dashboard/summary error:", err);
         res.status(500).json({ err: "Failed to fetch summary" });
