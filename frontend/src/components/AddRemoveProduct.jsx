@@ -11,7 +11,6 @@ function AddRemoveProduct() {
         productQty: "",
     });
     const [modal, setModal] = useState({ open: false, title: '', message: '' });
-    // const [file, setFile] = useState(null);
 
 
     const handleChange = (e) => {
@@ -47,12 +46,6 @@ function AddRemoveProduct() {
         // show modal with server response
         setModal({ open: true, title: res.ok ? 'Success' : 'Error', message: data.message || (res.ok ? 'Product added' : 'Failed to add product') });
     }
-    // const handleChange = (e) => {
-    //     const selectedFile = e.target.files[0];
-    //     if (selectedFile) {
-    //         setFile(URL.createObjectURL(selectedFile));
-    //     }
-    // }
 
 
     return (
@@ -62,13 +55,13 @@ function AddRemoveProduct() {
             <div className="card">
               <form className="form" onSubmit={handleSubmit}>
                   <label>Name</label>
-                  <input className="input" type="text" name="productName" placeholder="Enter product name..." onChange={handleChange} value={form.productName}/>
+                  <input className="input" type="text" name="productName" placeholder="Enter product name..." onChange={handleChange} value={form.productName} required />
 
                   <label>Buying Price</label>
-                  <input className="input" type="number" name="buyingPrice" placeholder="Enter buying price..." onChange={handleChange} value={form.buyingPrice}/>
+                  <input className="input" type="number" name="buyingPrice" placeholder="Enter buying price..." onChange={handleChange} value={form.buyingPrice} required />
 
                   <label>Quantity</label>
-                  <input className="input" type="number" name="productQty" placeholder="Enter quantity..." onChange={handleChange} value={form.productQty}/>
+                  <input className="input" type="number" name="productQty" placeholder="Enter quantity..." onChange={handleChange} value={form.productQty} required />
 
                   <div className="actions">
                     <button className="btn primary" type="submit">Add Product</button>

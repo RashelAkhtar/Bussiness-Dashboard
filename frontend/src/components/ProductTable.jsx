@@ -85,8 +85,10 @@ function ProductTable () {
             salesByProduct[pid].push(s);
         }
 
-        const merged = data.map((p) => {
-            const pid = String(p.id);
+        const merged = data.map((p, index) => {
+            // Ensure ID is always present - use index as fallback if id is missing
+            const productId = p.id !== undefined && p.id !== null ? p.id : index + 1;
+            const pid = String(productId);
             const sales = salesByProduct[pid] || [];
             // compute total sold and profit aggregates
             const totalSold = sales.reduce((sum, s) => sum + Number(s.quantitySold ?? s.quantity ?? 0), 0);
@@ -97,10 +99,13 @@ function ProductTable () {
                 latestProfitPerUnit = sales[0].profitPerUnit ?? sales[0].profit_per_unit ?? '';
             }
             return {
-                ...p,
-                profitPerUnit: latestProfitPerUnit,
-                totalProfit: totalProfit,
-                quantitySold: totalSold,
+                id: productId,
+                productName: p.productName || '',
+                buyingPrice: p.buyingPrice || 0,
+                productQty: p.productQty || 0,
+                profitPerUnit: latestProfitPerUnit || '-',
+                totalProfit: totalProfit || 0,
+                quantitySold: totalSold || 0,
             };
         });
 
@@ -138,17 +143,72 @@ function ProductTable () {
     }
 
     const columns = [
-        {accessorKey: "id", header: "ID"},
-        {accessorKey: "productName", header: "Name"},
-        {accessorKey: "buyingPrice", header: "Buying Price"},
-        {accessorKey: "productQty", header: "Quantity"},
-        {accessorKey: "profitPerUnit", header: "Profit Per Unit"},
-        {accessorKey: "quantitySold", header: "Quantity Sold"},
-        {accessorKey: "totalProfit", header: "Total Profit"},
         {
+            id: "id",
+            accessorKey: "id",
+            header: "ID",
+            cell: (info) => {
+                const value = info.getValue();
+                return value !== null && value !== undefined ? String(value) : '';
+            }
+        },
+        {
+            id: "productName",
+            accessorKey: "productName",
+            header: "Name",
+            cell: (info) => info.getValue() || ''
+        },
+        {
+            id: "buyingPrice",
+            accessorKey: "buyingPrice",
+            header: "Buying Price",
+            cell: (info) => {
+                const value = info.getValue();
+                return value !== null && value !== undefined ? value : 0;
+            }
+        },
+        {
+            id: "productQty",
+            accessorKey: "productQty",
+            header: "Quantity",
+            cell: (info) => {
+                const value = info.getValue();
+                return value !== null && value !== undefined ? value : 0;
+            }
+        },
+        {
+            id: "profitPerUnit",
+            accessorKey: "profitPerUnit",
+            header: "Profit Per Unit",
+            cell: (info) => {
+                const value = info.getValue();
+                return value !== null && value !== undefined && value !== '' ? value : '-';
+            }
+        },
+        {
+            id: "quantitySold",
+            accessorKey: "quantitySold",
+            header: "Quantity Sold",
+            cell: (info) => {
+                const value = info.getValue();
+                return value !== null && value !== undefined ? value : 0;
+            }
+        },
+        {
+            id: "totalProfit",
+            accessorKey: "totalProfit",
+            header: "Total Profit",
+            cell: (info) => {
+                const value = info.getValue();
+                return value !== null && value !== undefined ? value : 0;
+            }
+        },
+        {
+            id: "actions",
             header: "Actions",
-            cell: ({row}) => (
-                <button className="btn danger" onClick={() => handleDelete(row.original.id)}>DELETE</button>
+            enableSorting: false,
+            cell: (info) => (
+                <button className="btn danger" onClick={() => handleDelete(info.row.original.id)}>DELETE</button>
             )
         }
     ];
@@ -167,37 +227,39 @@ function ProductTable () {
         <div className="product-table page">
         <h2 className="page-title">Product Table</h2>
 
-    <table className="table" cellPadding="8">
-            <thead>
-                {table.getHeaderGroups().map((group) => (
-                    <tr key={group.id}>
-                    {group.headers.map((header) => (
-                        <th key={header.id}>
-                        {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                        )}
-                        </th>
+        <div className="table-wrapper">
+            <table className="table">
+                <thead>
+                    {table.getHeaderGroups().map((group) => (
+                        <tr key={group.id}>
+                            {group.headers.map((header) => (
+                                <th key={header.id}>
+                                    {flexRender(
+                                        header.column.columnDef.header,
+                                        header.getContext()
+                                    )}
+                                </th>
+                            ))}
+                        </tr>
                     ))}
-                    </tr>
-                ))}
-            </thead>
+                </thead>
 
-            <tbody>
-                {table.getRowModel().rows.map((row) => (
-                    <tr key={row.id}>
-                    {row.getVisibleCells().map((cell) => (
-                        <td key={cell.id}>
-                        {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                        )}
-                        </td>
+                <tbody>
+                    {table.getRowModel().rows.map((row) => (
+                        <tr key={row.id}>
+                            {row.getVisibleCells().map((cell) => (
+                                <td key={cell.id}>
+                                    {flexRender(
+                                        cell.column.columnDef.cell,
+                                        cell.getContext()
+                                    )}
+                                </td>
+                            ))}
+                        </tr>
                     ))}
-                </tr>
-            ))}
-        </tbody>
-      </table>
+                </tbody>
+            </table>
+        </div>
 
     <div className="pagination">
         <button

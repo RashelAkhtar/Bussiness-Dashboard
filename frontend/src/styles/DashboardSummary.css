@@ -80,12 +80,6 @@
   letter-spacing: -0.02em;
 }
 
-.summary-header h2::before {
-  font-size: 2rem;
-  filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.3));
-  animation: pulse 2s ease-in-out infinite;
-}
-
 /* KPI Grid */
 .kpi-grid {
   display: grid;

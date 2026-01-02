@@ -15,7 +15,6 @@
 }
 
 .product-sold .page-title::before {
-  content: '💰';
   font-size: 1.5rem;
   filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.3));
 }

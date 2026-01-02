@@ -94,7 +94,7 @@ function ProductSold () {
 
     return (
         <div className="product-sold page">
-            <h1 className="page-title">Product Sold</h1>
+            <h1 className="page-title">💰 Product Sold</h1>
 
             <div className="card">
               <form className="form" onSubmit={handleSubmit}>
@@ -105,7 +105,7 @@ function ProductSold () {
                         type="text"
                         placeholder="Search products..."
                         value={filter}
-                        onChange={(e) => setFilter(e.target.value)}
+                        onChange={(e) => setFilter(e.target.value)}                    
                     />
 
                     <select className="input" name="productId" value={form.productId} onChange={(e) => {
@@ -123,10 +123,10 @@ function ProductSold () {
                 </div>
 
                     <label>Selling Price (per unit)</label>
-                    <input className="input" type="number" name="sellingPrice" onChange={handleChange} placeholder="Enter selling price..." value={form.sellingPrice} />
+                    <input className="input" type="number" name="sellingPrice" onChange={handleChange} placeholder="Enter selling price..." value={form.sellingPrice} required />
 
                     <label>Quantity</label>
-                    <input className="input" type="number" name="productQty" onChange={handleChange} placeholder="Enter quantity..." value={form.productQty} />
+                    <input className="input" type="number" name="productQty" onChange={handleChange} placeholder="Enter quantity..." value={form.productQty} required />
 
                     <div className="actions">
                         <button className="btn primary" type="submit">Record Sale</button>
