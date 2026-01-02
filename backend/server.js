@@ -12,8 +12,25 @@ dotenv.config({ path: envPath });
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+// Configure CORS with explicit options
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: false
+}));
+
+// Handle preflight requests
+app.options('*', cors());
+
 app.use(express.json());
+
+// Health check endpoint
+app.get("/health", (req, res) => {
+    res.json({ status: "ok", message: "Server is running" });
+});
+
+// API routes
 app.use("/api/dashboard", router);
 
 // simple login endpoint - compares against env vars (no JWT)
@@ -175,6 +192,20 @@ app.get('/api/sales', async (req, res) => {
     }
 });
 
-app.listen(PORT, ()=> {
+// 404 handler for undefined routes
+app.use((req, res) => {
+    console.log(`404 - Route not found: ${req.method} ${req.path}`);
+    res.status(404).json({ error: 'Route not found', path: req.path });
+});
+
+// Error handler
+app.use((err, req, res, next) => {
+    console.error('Server error:', err);
+    res.status(500).json({ error: 'Internal server error', message: err.message });
+});
+
+app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
-})
+    console.log(`Health check: http://localhost:${PORT}/health`);
+    console.log(`Dashboard API: http://localhost:${PORT}/api/dashboard/summary`);
+});
