@@ -1,4 +1,4 @@
-import {flexRender, getCoreRowModel, getPaginationRowModel, useReactTable} from "@tanstack/react-table";
+import {flexRender, getCoreRowModel, getPaginationRowModel, getSortedRowModel, useReactTable} from "@tanstack/react-table";
 import { useEffect, useState } from "react";
 import "../styles/ProductTable.css";
 import Modal from './Modal';
@@ -11,6 +11,7 @@ function ProductTable () {
     const [mergedData, setMergedData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [modal, setModal] = useState({ open: false, title: '', message: '' });
+    const [sorting, setSorting] = useState([]);
 
     // Fetch product
     const fetchProduct = async () => {
@@ -216,7 +217,10 @@ function ProductTable () {
     const table = useReactTable({
         data: mergedData,
         columns,
+        state: { sorting },
+        onSortingChange: setSorting,
         getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
     });
 
@@ -227,17 +231,59 @@ function ProductTable () {
         <div className="product-table page">
         <h2 className="page-title">Product Table</h2>
 
+        <div className="table-toolbar" style={{ display: 'flex', gap: 12, marginBottom: 12, alignItems: 'center' }}>
+            <label style={{ fontSize: 14, color: 'var(--text-secondary)' }}>Sort by</label>
+            <select
+                value={sorting.length ? sorting[0].id : ''}
+                onChange={(e) => {
+                    const col = e.target.value;
+                    if (!col) {
+                        setSorting([]);
+                        return;
+                    }
+                    setSorting([{ id: col, desc: false }]);
+                }}
+                className="input"
+                style={{ width: 220 }}
+            >
+                <option value="">-- none --</option>
+                {columns.filter(c => c.id !== 'actions').map(c => (
+                    <option key={c.id} value={c.id}>{typeof c.header === 'string' ? c.header : c.id}</option>
+                ))}
+            </select>
+
+            <button className="btn" onClick={() => {
+                if (!sorting.length) return;
+                const cur = sorting[0];
+                setSorting([{ id: cur.id, desc: !cur.desc }]);
+            }}>{sorting.length && sorting[0].desc ? 'Sort 🔽' : 'Sort 🔼'}</button>
+
+            <button className="btn" onClick={() => setSorting([])}>Clear</button>
+        </div>
+
         <div className="table-wrapper">
             <table className="table">
                 <thead>
                     {table.getHeaderGroups().map((group) => (
                         <tr key={group.id}>
                             {group.headers.map((header) => (
-                                <th key={header.id}>
-                                    {flexRender(
-                                        header.column.columnDef.header,
-                                        header.getContext()
-                                    )}
+                                <th
+                                    key={header.id}
+                                    onClick={header.column.getCanSort() ? header.column.getToggleSortingHandler() : undefined}
+                                    style={{ cursor: header.column.getCanSort() ? 'pointer' : 'default' }}
+                                >
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                        {flexRender(
+                                            header.column.columnDef.header,
+                                            header.getContext()
+                                        )}
+                                        {/* sort indicator */}
+                                        {header.column.getCanSort() ? (
+                                            <span style={{ fontSize: 12, opacity: 0.8 }}>
+                                                {header.column.getIsSorted() === 'asc' ? ' 🔼' : header.column.getIsSorted() === 'desc' ? ' 🔽' : ''}
+                                            </span>
+                                        ) : null}
+                                    </div>
                                 </th>
                             ))}
                         </tr>
