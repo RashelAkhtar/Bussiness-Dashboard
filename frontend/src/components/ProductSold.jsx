@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import ProductTable from "./ProductTable";
 import "../styles/ProductSold.css";
+import "../styles/AddRemoveProduct.css"; // reuse typeahead styles
 
 function ProductSold () {
     const API = import.meta.env.VITE_API;
@@ -8,41 +9,88 @@ function ProductSold () {
     const [form, setForm] = useState({
         productId: "",
         productName: "",
+        buyingPrice: "",
         sellingPrice: "",
         productQty: "",
     });
-    const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [filter, setFilter] = useState("");
-
-    // Fetch product
-    const fetchProduct = async () => {
-        try {
-            const res = await fetch(`${API}/api/product`);
-            const json = await res.json();
-
-            const rows = (Array.isArray(json) ? json : json.data || [])
-                .map((r) => ({
-                    id: r.id,
-                    productName: r.product_name ?? r.productName,
-                    buyingPrice: r.buying_price ?? r.buyingPrice,
-                    productQty: r.quantity ?? r.productQty,
-                }));
-
-            setData(rows);
-        } catch (err) {
-            console.log("Failed to fetch product: ", err);
-        } finally {
-            setLoading(false);
-        }
-    };
+    const [products, setProducts] = useState([]);
+    const [suggestions, setSuggestions] = useState([]);
+    const [activeIndex, setActiveIndex] = useState(-1);
 
     useEffect(() => {
-        fetchProduct();
-    }, []);
+        const fetchProducts = async () => {
+            try {
+                const res = await fetch(`${API}/api/product`);
+                const json = await res.json();
+
+                const rows = (Array.isArray(json) ? json : json.data || [])
+                    .map((r) => ({
+                        id: r.id,
+                        productName: r.product_name ?? r.productName,
+                        buyingPrice: r.buying_price ?? r.buyingPrice,
+                        productQty: r.quantity ?? r.productQty,
+                    }));
+
+                setProducts(rows);
+            } catch (err) {
+                console.log("Failed to fetch product: ", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProducts();
+    }, [API]);
 
     const handleChange = (e) => {
-        setForm({...form, [e.target.name]: e.target.value})
+        const name = e.target.name;
+        const value = e.target.value;
+        setForm({ ...form, [name]: value });
+
+        if (name === 'productName') {
+            const q = String(value || '').toLowerCase();
+            if (q.length === 0) {
+                setSuggestions([]);
+                setActiveIndex(-1);
+                return;
+            }
+            const matches = products.filter(p => (p.productName || p.product_name || '').toLowerCase().includes(q)).slice(0,8);
+            setSuggestions(matches);
+            setActiveIndex(matches.length ? 0 : -1);
+        }
+    }
+
+    const selectSuggestion = (s) => {
+        setForm({ ...form, productId: s.id, productName: s.productName, buyingPrice: s.buyingPrice });
+        setSuggestions([]);
+        setActiveIndex(-1);
+    }
+
+    const handleKeyDown = (e) => {
+        if (!suggestions || suggestions.length === 0) return;
+
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            setActiveIndex((i) => Math.min(i + 1, suggestions.length - 1));
+            return;
+        }
+        if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            setActiveIndex((i) => Math.max(i - 1, 0));
+            return;
+        }
+        if (e.key === 'Enter') {
+            if (activeIndex >= 0 && activeIndex < suggestions.length) {
+                e.preventDefault();
+                selectSuggestion(suggestions[activeIndex]);
+            }
+            return;
+        }
+        if (e.key === 'Escape') {
+            setSuggestions([]);
+            setActiveIndex(-1);
+        }
     }
 
     const handleSubmit = async (e) => {
@@ -83,7 +131,7 @@ function ProductSold () {
             window.dispatchEvent(new CustomEvent('product:sold', { detail: { productId: payload.productId } }));
 
             // reset form
-            setForm({ productId: '', productName: '', sellingPrice: '', productQty: '' });
+            setForm({ productId: '', productName: '', buyingPrice: '', sellingPrice: '', productQty: '' });
         } catch (err) {
             console.error(err);
             alert('Failed to record sale');
@@ -100,27 +148,39 @@ function ProductSold () {
               <form className="form" onSubmit={handleSubmit}>
                 <label>Product</label>
                 <div>
-                    <input
-                        className="input"
-                        type="text"
-                        placeholder="Search products..."
-                        value={filter}
-                        onChange={(e) => setFilter(e.target.value)}                    
-                    />
+                    <div className="typeahead">
+                        <input
+                            autoComplete="off"
+                            className="input"
+                            type="text"
+                            name="productName"
+                            placeholder="Search products..."
+                            value={form.productName}
+                            onChange={handleChange}
+                            onKeyDown={handleKeyDown}
+                        />
 
-                    <select className="input" name="productId" value={form.productId} onChange={(e) => {
-                        const id = e.target.value;
-                        const prod = data.find(d => String(d.id) === String(id));
-                        setForm({ ...form, productId: id, productName: prod ? prod.productName : "" });
-                    }}>
-                        <option value="">-- Select product --</option>
-                        {data
-                            .filter(p => p.productName.toLowerCase().includes(filter.toLowerCase()))
-                            .map((p) => (
-                                <option key={p.id} value={p.id}>{p.productName} (buying: {p.buyingPrice})</option>
-                            ))}
-                    </select>
+                        {suggestions.length > 0 && (
+                            <ul className="suggestions" role="listbox">
+                                {suggestions.map((s, idx) => (
+                                    <li
+                                        key={s.id}
+                                        role="option"
+                                        aria-selected={activeIndex === idx}
+                                        className={activeIndex === idx ? 'active' : ''}
+                                        onMouseEnter={() => setActiveIndex(idx)}
+                                        onClick={() => selectSuggestion(s)}
+                                    >
+                                        {s.productName} <span className="muted">(₹{s.buyingPrice})</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
                 </div>
+
+                    <label>Buying Price (per unit)</label>
+                    <input className="input" type="number" name="buyingPrice" placeholder="Buying price..." value={form.buyingPrice} disabled />
 
                     <label>Selling Price (per unit)</label>
                     <input className="input" type="number" name="sellingPrice" onChange={handleChange} placeholder="Enter selling price..." value={form.sellingPrice} required />

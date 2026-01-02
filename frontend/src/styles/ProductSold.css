@@ -140,6 +140,14 @@
   color: var(--text-muted);
 }
 
+/* highlight disabled buying price specifically for ProductSold page */
+.product-sold .input[disabled]{
+  background: linear-gradient(90deg, var(--bg-secondary), rgba(59, 59, 59, 0.03));
+  border-color: rgba(52, 52, 52, 0.18);
+  color: var(--text-light);
+  cursor: not-allowed;
+}
+
 .product-sold .input:hover:not(:focus) {
   border-color: var(--border-dark);
   background: var(--bg-secondary);

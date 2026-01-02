@@ -5,6 +5,35 @@
   animation: fadeIn 0.5s ease-out;
 }
 
+/* typeahead suggestions */
+.typeahead{ position:relative }
+.suggestions{
+  position:absolute;
+  left:0; right:0;
+  top:calc(100% + 6px);
+  /* visually distinct suggestion box */
+  background: linear-gradient(180deg, var(--bg-secondary), var(--bg-tertiary));
+  border:1px solid rgba(59,130,246,0.08);
+  border-radius:8px;
+  max-height:220px;
+  overflow:auto;
+  z-index:50;
+  box-shadow: var(--shadow-md);
+  padding:6px 0;
+}
+.suggestions li{ list-style:none; padding:8px 12px; cursor:pointer; display:flex; justify-content:space-between; gap:8px }
+.suggestions li:hover{ background: rgba(59,130,246,0.06) }
+.suggestions li.active{ background: var(--primary); color: #fff }
+.suggestions .muted{ color:var(--text-muted); font-size:0.85rem }
+
+/* disabled input highlight */
+.input[disabled]{
+  background: linear-gradient(90deg, var(--bg-secondary), rgba(59,130,246,0.03));
+  border-color: rgba(59,130,246,0.25);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
 .add-product .page-title {
   font-size: 1.75rem;
   font-weight: 800;

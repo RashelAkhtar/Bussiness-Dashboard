@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/AddRemoveProduct.css";
 import Modal from './Modal';
 
@@ -11,10 +11,35 @@ function AddRemoveProduct() {
         productQty: "",
     });
     const [modal, setModal] = useState({ open: false, title: '', message: '' });
+    const [products, setProducts] = useState([]);
+    const [suggestions, setSuggestions] = useState([]);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const res = await fetch(`${API}/api/product`);
+                const json = await res.json();
+                const rows = Array.isArray(json) ? json : json.data || [];
+                setProducts(rows);
+            } catch (err) {
+                console.error('Failed to preload products', err);
+            }
+        };
+        fetchProducts();
+    }, [API]);
 
 
     const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
+        const name = e.target.name;
+        const value = e.target.value;
+        setForm({ ...form, [name]: value });
+
+        if (name === 'productName') {
+            const q = String(value || '').toLowerCase();
+            if (q.length === 0) return setSuggestions([]);
+            const matches = products.filter(p => (p.product_name || p.productName || '').toLowerCase().includes(q)).slice(0,8);
+            setSuggestions(matches);
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -55,7 +80,21 @@ function AddRemoveProduct() {
             <div className="card">
               <form className="form" onSubmit={handleSubmit}>
                   <label>Name</label>
-                  <input className="input" type="text" name="productName" placeholder="Enter product name..." onChange={handleChange} value={form.productName} required />
+                  <div className="typeahead">
+                    <input autoComplete="off" className="input" type="text" name="productName" placeholder="Enter product name..." onChange={handleChange} value={form.productName} required />
+                    {suggestions.length > 0 && (
+                        <ul className="suggestions">
+                            {suggestions.map(s => (
+                                <li key={s.id} onClick={() => {
+                                    setForm({ ...form, productName: s.product_name, buyingPrice: s.buying_price });
+                                    setSuggestions([]);
+                                }}>
+                                    {s.product_name} <span className="muted">(₹{s.buying_price})</span>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                  </div>
 
                   <label>Buying Price</label>
                   <input className="input" type="number" name="buyingPrice" placeholder="Enter buying price..." onChange={handleChange} value={form.buyingPrice} required />
