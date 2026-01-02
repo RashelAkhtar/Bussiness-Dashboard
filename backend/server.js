@@ -16,6 +16,19 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/dashboard", router);
 
+// simple login endpoint - compares against env vars (no JWT)
+app.post('/api/login', (req, res) => {
+    const { username, password } = req.body || {};
+    const expectedUser = process.env.AUTH_USER;
+    const expectedPass = process.env.AUTH_PASS;
+
+    if (String(username) === String(expectedUser) && String(password) === String(expectedPass)) {
+        return res.json({ success: true, message: 'Authenticated' });
+    }
+
+    return res.status(401).json({ success: false, message: 'Invalid credentials' });
+});
+
 app.get("/api/product", async (req, res) => {
     try {
         const result = await pool.query(
