@@ -14,14 +14,11 @@ const PORT = process.env.PORT || 3000;
 
 // Configure CORS with explicit options
 app.use(cors({
-    origin: '*',
+    origin: '*',  
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: false
 }));
-
-// Handle preflight requests
-app.options('*', cors());
 
 app.use(express.json());
 
